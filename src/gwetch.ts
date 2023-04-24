@@ -67,13 +67,8 @@ export class GopherResponse
     {
         let i = this.buf.toString().split('\r\n');
         i.pop();
-        if(i[i.length -1] !== '.')
-        {
-            throw new Error('Invalid body.')
-        }
-        i.pop();
 
-        return i.map((v) => {
+        return i.filter((v) => {return !(['', '.'].includes(v))}).map((v) => {
             let type = v[0] as GopherItemType;
 
             if(!Object.values(GopherItemType).includes(type))
