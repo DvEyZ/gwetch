@@ -15,3 +15,7 @@ gwetch('gopher://gopher.floodgap.com').then((res) => {
     })
 })
 ```
+
+## Options
+
+- `timeout` - connection timeout, in ms. Default is `5000`.

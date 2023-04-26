@@ -90,7 +90,7 @@ export class GopherResponse
     }
 }
 
-export const gwetch = async (url :string) :Promise<GopherResponse> => {
+export const gwetch = async (url :string, options? :any) :Promise<GopherResponse> => {
     return new Promise((resolve,reject) => {
         let u = new URL(url);
         if(u.protocol !== 'gopher:')
@@ -100,8 +100,9 @@ export const gwetch = async (url :string) :Promise<GopherResponse> => {
         let data = Buffer.from([]);
         let timeout = setTimeout(() => {
             reject(new Error('Server timeout.'))
-        }, 5000);
+        }, options.timeout || 5000);
         let socket :net.Socket = net.connect({host: u.hostname, port: Number(u.port) || 70}, () => {
+            clearTimeout(timeout);
             socket.write(`${u.pathname}\n`);
             socket.on('data', (d) => {
                 data = Buffer.concat([data,d]);
@@ -110,7 +111,6 @@ export const gwetch = async (url :string) :Promise<GopherResponse> => {
                 resolve(new GopherResponse(data));
             })
             socket.on('error', (err) => {
-                clearTimeout(timeout);
                 reject(err);
             });
         })
