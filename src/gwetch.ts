@@ -100,10 +100,10 @@ export const gwetch = async (url :string, options? :any) :Promise<GopherResponse
         let data = Buffer.from([]);
         let timeout = setTimeout(() => {
             reject(new Error('Server timeout.'))
-        }, options.timeout || 5000);
+        }, options?.timeout || 5000);
         let socket :net.Socket = net.connect({host: u.hostname, port: Number(u.port) || 70}, () => {
             clearTimeout(timeout);
-            socket.write(`${u.pathname}\n`);
+            socket.write(`${u.pathname}${u.search}\n`);
             socket.on('data', (d) => {
                 data = Buffer.concat([data,d]);
             });
